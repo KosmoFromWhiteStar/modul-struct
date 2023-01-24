@@ -1,0 +1,23 @@
+-------------------
+Site #0
+Owner: Teregulov
+Square of site 150
+Square occupied bildings 64
+-------------------
+House have 2 floors
+floor 0 have:
+3 rooms
+Living room Kitchen Children room Total square of 0 floor = 130.04
+floor 1 have:
+2 rooms
+Living room Total square of 1 floor = 170.45
+Have oven
+-------------------
+Bathhouse:
+Have oven
+ sq : 12
+-------------------
+Garage. sq: 12
+-------------------
+Warehouse. sq: 12
+-------------------
