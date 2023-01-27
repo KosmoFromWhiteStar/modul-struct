@@ -39,7 +39,6 @@ int main() {
     }
     else if (comand == "add"){
 
-        std::ofstream info ("info.bin");
         std::ofstream dec ("dec.bin", std::ios::app);
 
         if(!dec.is_open()) std::cout << "NE open dec";
@@ -58,7 +57,6 @@ int main() {
         std::cin >> str;
         dec << str << ' ';
 
-        info.close();
         dec.close();
     }
     return 0;
