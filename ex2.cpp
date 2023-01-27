@@ -39,39 +39,21 @@ struct lvl
 	double height = 0.f;
 };
 
-struct houme
+struct build
 {
+	int erection = 0;
 	std::vector <lvl> floor;
 	float area = 0.f;
-	const bool oven = true;
-};
-
-struct shed
-{
-	double area = 0;
-};
-
-struct barn
-{
-	double area = 0;
-};
-
-struct banya
-{
-	double area = 0;
 	bool oven = true;
 };
+
 
 struct sites
 {
 	int num = 0;
 	std::string owner = "";
 	double area = 0.f;
-	int build = 1; // for bites chek build on site
-	houme dom;
-	shed gara;
-	barn saray;
-	banya parilka;
+	std::vector <build> bildings;
 };
 
 void b_floor(lvl* floor)
@@ -97,9 +79,10 @@ void b_floor(lvl* floor)
 	}
 }
 
-void build_houme(houme* houme)
+void build_houme (build* houme)
 {
 	std::cout << "Input area of houme: ";
+	houme->erection = buildings::house;
 	std::cin >> houme->area;
 
 	fl:
@@ -124,10 +107,10 @@ void build_houme(houme* houme)
 float free_sq(sites* site)
 {
 	double result = site->area;
-	result -= site->dom.area;
-	result -= site->gara.area;
-	result -= site->saray.area;
-	result -= site->parilka.area;
+	for (int i = 0; i < site->bildings.size(); i++)
+	{
+		result -= site->bildings[i].area;
+	}
 	return result;
 }
 
@@ -137,6 +120,9 @@ void another_build(sites* site)
 	std::cout << "Home have in anycase\nDoes another bildings have in site?";
 	std::string answere;
 	std::cin >> answere;
+	int count_b = 0;
+	int index = 1;
+	site->bildings.resize(index); // for houme
 	if (answere == "no") return;
 	else if (answere == "yes")
 	{
@@ -144,25 +130,50 @@ void another_build(sites* site)
 		std::cin >> answere;
 		if (answere == "yes")
 		{
-			site->build |= buildings::garage;
-			std::cout << "Sq: ";
-			std::cin >> site->gara.area;
+			std::cout << "count: ";
+			std::cin >> count_b;
+			site->bildings.resize(site->bildings.size() + count_b);
+			for (int i = index; i < count_b + index; i++)
+			{
+
+				site->bildings[i].erection |= buildings::garage;
+				std::cout << "Sq: ";
+				std::cin >> site->bildings[i].area;
+
+			}
+			index += count_b;
 		}
 		std::cout << "Wharehouse?\n";
 		std::cin >> answere;
 		if (answere == "yes")
 		{
-			site->build |= buildings::warehouse;
-			std::cout << "Sq: ";
-			std::cin >> site->saray.area;
+			std::cout << "count: ";
+			std::cin >> count_b;
+			site->bildings.resize(site->bildings.size() + count_b);
+			for (int i = index; i < count_b + index; i++)
+			{
+
+				site->bildings[i].erection |= buildings::warehouse;
+				std::cout << "Sq: ";
+				std::cin >> site->bildings[i].area;
+
+			}
 		}
 		std::cout << "Bathhouse?\n";
 		std::cin >> answere;
 		if (answere == "yes")
 		{
-			site->build |= buildings::bathhouse;
-			std::cout << "Sq: ";
-			std::cin >> site->parilka.area;
+			std::cout << "count: ";
+			std::cin >> count_b;
+			site->bildings.resize(site->bildings.size() + count_b);
+			for (int i = index; i < count_b + index; i++)
+			{
+
+				site->bildings[i].erection |= buildings::bathhouse;
+				std::cout << "Sq: ";
+				std::cin >> site->bildings[i].area;
+
+			}
 		}
 	}
 	else 
@@ -187,7 +198,7 @@ void set_build(sites* site)
 	line();
 	another_build(site);
 	line();
-	build_houme(&site->dom);
+	build_houme(&site->bildings[0]);
 	line();
 }
 
@@ -207,42 +218,46 @@ void write_in_files(sites* site)
 	file << "Square of site " << site->area << std::endl;
 	file << "Square occupied bildings " << free_sq(site) << std::endl;
 	file << s_str;
-	file << "House have " << site->dom.floor.size() << " floors\n";
-	for (int i = 0; i < site->dom.floor.size(); i++)
+	file << "House have " << site->bildings[0].floor.size() << " floors\n";
+	for (int i = 0; i < site->bildings[0].floor.size(); i++)
 	{
 		file << "floor " << i << " have:" << std::endl;
-		file << site->dom.floor[i].r.size() << " rooms.\n";
-		file << "Height floor = " << site->dom.floor[i].height << std::endl;
+		file << site->bildings[0].floor[i].r.size() << " rooms.\n";
+		file << "Height floor = " << site->bildings[0].floor[i].height << std::endl;
 		float square = 0.f;
 
-		for (int c = 0; c < site->dom.floor[i].r.size(); c++)
+		for (int c = 0; c < site->bildings[0].floor[i].r.size(); c++)
 		{
-			file << (site->dom.floor[i].r[c].type_r & room::bathroom ? "Bathroom " : "");
-			file << (site->dom.floor[i].r[c].type_r & room::children_room ? "Children room " : "");
-			file << (site->dom.floor[i].r[c].type_r & room::kitchen ? "Kitchen " : "");
-			file << (site->dom.floor[i].r[c].type_r & room::living_room ? "Living room " : "");
-			square += site->dom.floor[i].r[c].sq;
-			file << std::endl;
+			file << (site->bildings[0].floor[i].r[c].type_r & room::bathroom ? "Bathroom " : "");
+			file << (site->bildings[0].floor[i].r[c].type_r & room::children_room ? "Children room " : "");
+			file << (site->bildings[0].floor[i].r[c].type_r & room::kitchen ? "Kitchen " : "");
+			file << (site->bildings[0].floor[i].r[c].type_r & room::living_room ? "Living room " : "");
+			square += site->bildings[0].floor[i].r[c].sq;
+			
 		}
+		file << std::endl;
 		file << "Total square of " << i << " floor = " << square << std::endl;
 	}
-	file << (site->dom.oven ? "Have oven" : "Don't have oven") << std::endl;
-	if (site->build & buildings::bathhouse)
+	file << (site->bildings[0].oven ? "Have oven" : "Don't have oven") << std::endl;
+	for (int i = 1; i < site->bildings.size(); i++)
 	{
-		file << s_str;
-		file << "Bathhouse:\n"
-			 << (site->parilka.oven? "Have oven" : "Don't have oven") << std::endl 
-			 << "sq : " << site->parilka.area << std::endl;
-	}
-	if (site->build & buildings::garage)
-	{
-		file << s_str;
-		file << "Garage. sq: " << site->gara.area << std::endl;
-	}
-	if (site->build & buildings::warehouse)
-	{
-		file << s_str;
-		file << "Warehouse. sq: " << site->saray.area << std::endl;
+		if (site->bildings[i].erection & buildings::bathhouse)
+		{
+			file << s_str;
+			file << "Bathhouse:\n"
+				<< (site->bildings[i].oven ? "Have oven" : "Don't have oven") << std::endl
+				<< "sq : " << site->bildings[i].area << std::endl;
+		}
+		if (site->bildings[i].erection & buildings::garage)
+		{
+			file << s_str;
+			file << "Garage. sq: " << site->bildings[i].area << std::endl;
+		}
+		if (site->bildings[i].erection & buildings::warehouse)
+		{
+			file << s_str;
+			file << "Warehouse. sq: " << site->bildings[i].area << std::endl;
+		}
 	}
 	file << s_str;
 	file.close();

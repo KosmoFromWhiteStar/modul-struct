@@ -1,0 +1,33 @@
+-------------------
+Site #0
+Owner: Kosmo
+Square of site 500
+Square occupied bildings -60
+-------------------
+House have 2 floors
+floor 0 have:
+4 rooms.
+Height floor = 0
+Kitchen 
+Living room 
+Bathroom 
+Living room 
+Total square of 0 floor = 740
+floor 1 have:
+2 rooms.
+Height floor = 0
+Children room 
+Living room 
+Total square of 1 floor = 650
+Have oven
+-------------------
+Garage. sq: 120
+-------------------
+Bathhouse:
+Have oven
+sq : 170
+-------------------
+Warehouse. sq: 170
+-------------------
+Warehouse. sq: 40
+-------------------
