@@ -3,10 +3,11 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <vector>
 
 struct player
 {
-	std::string name ="";
+	std::string name = "";
 	int healthpoinyt = 0;
 	int armor = 0;
 	int damage = 0;
@@ -14,6 +15,7 @@ struct player
 	int pos_y = 0;
 	bool in_game = true; // false its flag to end game
 };
+
 void display(player* hero, player* enemy)
 {
 	
@@ -61,13 +63,20 @@ void display(player* hero, player* enemy)
 	printf("|\tDMG :\t%i\t|\n", hero->damage);
 	std::cout << "+-----------------------+\n";
 }
+
 void safe(player* hero, player* enemy)
 {
 	std::ofstream file;
 	file.open("safe.bin", std::ios::binary);
 	if (!file.is_open()) std::cout << "File isnt open\nComething breaked";
 	{
-		file.write((char*)&(hero->name), sizeof(hero->name));
+		int siz = hero->name.length();
+		file.write((char*)&siz, sizeof(int)); 
+		for (int i = 0; i < siz; i++)
+		{
+			char t = hero->name[i];
+			file.write(&t, sizeof(char));
+		}
 		file.write((char*)&(hero->healthpoinyt), sizeof(hero->healthpoinyt));
 		file.write((char*)&(hero->armor), sizeof(hero->armor));
 		file.write((char*)&(hero->damage), sizeof(hero->damage));
@@ -75,6 +84,13 @@ void safe(player* hero, player* enemy)
 		file.write((char*)&(hero->pos_y), sizeof(hero->pos_y));
 		for (int i = 0; i < 5; i++)
 		{
+			siz = enemy[i].name.length();
+			file.write((char*)&(siz), sizeof(int));
+			for (int c = 0; c < siz; c++)
+			{
+				char t = enemy[i].name[c];
+				file.write(&t, sizeof(char));
+			}
 			file.write((char*)&(enemy[i].name), sizeof(enemy[i].name));
 			file.write((char*)&(enemy[i].healthpoinyt), sizeof(enemy[i].healthpoinyt));
 			file.write((char*)&(enemy[i].armor), sizeof(enemy[i].armor));
@@ -87,13 +103,21 @@ void safe(player* hero, player* enemy)
 	}
 	file.close();
 }
+
 void load(player* hero, player* enemy)
 {
 	std::ifstream file;
 	file.open("safe.bin", std::ios::binary);
 	if (!file.is_open()) std::cout << "File isnt open\nChek files on PC";
 	{
-		file.read((char*)&(hero->name), sizeof(hero->name));
+		int siz = 0;
+		file.read((char*)&(siz), sizeof(int));
+		for (int i = 0; i < siz; i++)
+		{
+			char t;
+			file.read(&t, sizeof(char));
+			hero->name[i] = t;
+		}
 		file.read((char*)&(hero->healthpoinyt), sizeof(hero->healthpoinyt));
 		file.read((char*)&(hero->armor), sizeof(hero->armor));
 		file.read((char*)&(hero->damage), sizeof(hero->damage));
@@ -101,6 +125,13 @@ void load(player* hero, player* enemy)
 		file.read((char*)&(hero->pos_y), sizeof(hero->pos_y));
 		for (int i = 0; i < 5; i++)
 		{
+			file.read((char*)&siz, sizeof(int));
+			for (int c = 0; c < siz; c++)
+			{
+				char t;
+				file.read(&t, sizeof(char));
+				enemy[i].name[c] = t;
+			}
 			file.read((char*)&(enemy[i].name), sizeof(enemy[i].name));
 			file.read((char*)&(enemy[i].healthpoinyt), sizeof(enemy[i].healthpoinyt));
 			file.read((char*)&(enemy[i].armor), sizeof(enemy[i].armor));
@@ -113,6 +144,7 @@ void load(player* hero, player* enemy)
 	}
 	file.close();
 }
+
 void move_p(player* hero, player* enemy)
 {
 	std::string move;
