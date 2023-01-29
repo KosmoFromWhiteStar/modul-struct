@@ -28,7 +28,7 @@ void subtract()
 	std::cin >> vec[1].x >> vec[1].y;
 	vec[1].x -= vec[0].x;
 	vec[1].y -= vec[0].y;
-	std::cout << "Otained vector x: " << vec[1].x << " y: " << vec[1].y << std::endl;
+	std::cout << "Obtained vector x: " << vec[1].x << " y: " << vec[1].y << std::endl;
 }
 void scale()
 {

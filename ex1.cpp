@@ -15,10 +15,7 @@ int main() {
     std::string comand;
     std::cin >> comand;
 
-    std::ifstream info("info.bin");
     int count = 0;
-    info >> count;
-    info.close();
 
     if(comand == "list")
     {
